@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 
 
-//Dummy data for testing purpose
+//dummy data for testing purpose
 
 const order= [
     {
@@ -41,9 +41,6 @@ const order= [
 //route to get method for getting all customer/order list
 
 router.get('/', (req, res)=>{
-    if (!order){
-        res.status(404).json({error:'There is not any orders to display'})
-    }
     res.send(order)
 });
 
@@ -54,7 +51,7 @@ router.get('/:id', (req, res) => {
     const {id} = req.params;
 
 
-// Check if the entered id is a valid number or some string
+// check if the entered id is a valid number or some string
 
     if (isNaN(id)){
         res.status(404).json({error:'Please enter a valid id'})
@@ -82,6 +79,8 @@ router.get('/:type/:date', (req, res)=>{
     const {type}= req.params
     const {date}= req.params
 
+    
+
     let count=0;
 
     var orders=[]
@@ -89,6 +88,10 @@ router.get('/:type/:date', (req, res)=>{
     var customer=[]
 
     var successJson = []
+
+    if (isNaN(date)){
+        res.status(404).json({error:'Please enter a valid date'})
+    } else{
    
 //lopping through all the products 
 
@@ -98,7 +101,7 @@ router.get('/:type/:date', (req, res)=>{
 
         let dateConverted=order[i].date.replaceAll('-','')  
 
-// Using the condition to check the type and date of order and pushing the respective order id and customer name into customer and order arrays
+// using the condition to check the type and date of order and pushing the respective order id and customer name into customer and order arrays
 
         if (order[i].type== type && dateConverted==date){
             
@@ -115,16 +118,16 @@ router.get('/:type/:date', (req, res)=>{
         related_customers:customer})
 
 
-//Checking if user enter valid type and date input
+//checking if user enter valid type and date input
 
     if (count==0){
-        res.status(404).json({error:'Please enter a valid type and date'})
-    }
+        res.status(404).json({error:'No record has been matched! Please enter a valid type and date'})
+    }else {
 
 
     res.send(successJson)
-    
-    
+    }
+}
 
 })
 
